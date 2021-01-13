@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.lin.mapper.TaskMapper">
+    <select id="queryAllTask" resultType="Task">
+        select * from project.task
+    </select>
+
+   <insert id="addTask" parameterType="Task">
+        insert into project.task (task_name,task_typeId,task_piroId,task_statuId,task_toUserId,task_desc,task_eTime,task_sTime,task_rTime,task_startDate,task_stopDate,task_createTime)
+        values (#{taskName},#{taskTypeId},#{taskPiroId},#{taskStatuId},#{taskToUserId},#{taskDesc},#{taskETime},#{taskSTime},#{taskRTime},#{taskStartDate},#{taskStopDate},#{taskCreateTime})
+   </insert>
+
+    <select id="queryInTask" resultType="Task">
+        select * from project.task where task_statuId = 2
+    </select>
+
+    <update id="updateETime" parameterType="int">
+        update project.task set task_eTime = #{taskETime} where task_id = #{taskId}
+    </update>
+
+    <select id="queryTaskById" resultType="Task">
+        select * from project.task where task_Id = #{taskId}
+    </select>
+
+    <select id="queryHistoryByTaskId" parameterType="int" resultType="History">
+        select * from project.history where history_taskId = #{taskId}
+    </select>
+
+    <insert id="insertHistory" parameterType="History">
+        insert into project.history (history_text,history_taskId,history_note)
+        values (#{historyText},#{historyTaskId},#{historyNote})
+    </insert>
+
+    <update id="toStartTask" parameterType="Task">
+        update project.task set task_statuId = 2,task_rTime = #{taskRTime},task_sTime = #{taskSTime} where task_id = #{taskId}
+    </update>
+
+    <update id="updateTask" parameterType="Task">
+        update project.task set task_name = #{taskName},task_typeId = #{taskTypeId},task_piroId = #{taskPiroId},task_toUserId = #{taskToUserId},task_desc = #{taskDesc} where task_id = #{taskId}
+    </update>
+
+    <update id="toStopTask" parameterType="Task">
+        update project.task set task_statuId = 4,task_sTime = #{taskSTime},task_rTime = #{taskRTime} where task_id = #{taskId}
+    </update>
+
+    <update id="finishTask" parameterType="Task">
+        update project.task set task_statuId = 1,task_sTime = #{taskSTime},task_toUserId = #{taskToUserId},task_finisherId = #{taskFinisherId} where task_id = #{taskId}
+    </update>
+
+    <update id="closeTask" parameterType="int">
+        update project.task set task_statuId = 5 where task_id = #{taskId}
+    </update>
+
+    <update id="postTask" parameterType="Task">
+        update project.task set task_rTime = #{taskRTime},task_sTime = #{taskSTime},task_toUserId = #{taskToUserId} where task_id = #{taskId}
+    </update>
+</mapper>
